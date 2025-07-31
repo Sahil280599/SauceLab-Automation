@@ -388,9 +388,6 @@ Test execution completed.
 - Follow the existing Page Object Model pattern
 - Update documentation for any new features
 
-## 📄 License
-
-This project is licensed under the MIT License.
 
 ## 🤝 Support
 
@@ -398,4 +395,4 @@ For questions or issues, please create an issue in the repository.
 
 ---
 
-**Note**: This framework is designed for educational and assessment purposes. Always follow best practices for test automation in production environments. 
+**Note**: This framework is designed for educational and assessment purposes. 
