@@ -1,0 +1,42 @@
+{
+  "name": "playwright-bdd-framework",
+  "version": "1.0.0",
+  "description": "Playwright BDD Framework with Cucumber",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js",
+    "test:headed": "cucumber-js --headed",
+    "test:debug": "cucumber-js --debug",
+    "report": "open reports/cucumber-report.html || xdg-open reports/cucumber-report.html || start reports/cucumber-report.html",
+    "report:generate": "cucumber-js --format html:reports/cucumber-report.html --format json:reports/cucumber-report.json",
+    "report:open": "open reports/ || xdg-open reports/ || start reports/",
+    "docker:build": "docker build -t playwright-bdd-framework .",
+    "docker:build:simple": "docker build -f Dockerfile.simple -t playwright-bdd-framework-simple .",
+    "docker:run": "docker run --rm -v $(pwd)/reports:/app/reports playwright-bdd-framework",
+    "docker:run:simple": "docker run --rm -v $(pwd)/reports:/app/reports playwright-bdd-framework-simple",
+    "docker:test": "docker-compose up playwright-tests",
+    "docker:test:login": "docker-compose up test-login",
+    "docker:test:checkout": "docker-compose up test-checkout",
+    "docker:test:smoke": "docker-compose up test-smoke",
+    "docker:clean": "docker-compose down --rmi all --volumes --remove-orphans"
+  },
+  "keywords": [
+    "playwright",
+    "bdd",
+    "cucumber",
+    "testing",
+    "automation"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.0.1",
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.10.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "playwright": "^1.40.0"
+  }
+} 

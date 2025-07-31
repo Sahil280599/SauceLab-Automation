@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  playwright-tests:
+    build: .
+    container_name: playwright-bdd-framework
+    volumes:
+      - ./reports:/app/reports
+      - ./screenshots:/app/screenshots
+    environment:
+      - NODE_ENV=production
+      - CI=true
+    command: npm test
+    
+  # Service to run specific test suites
+  test-login:
+    build: .
+    container_name: playwright-login-tests
+    volumes:
+      - ./reports:/app/reports
+    environment:
+      - NODE_ENV=production
+      - CI=true
+    command: npx cucumber-js src/features/login.feature
+    
+  test-checkout:
+    build: .
+    container_name: playwright-checkout-tests
+    volumes:
+      - ./reports:/app/reports
+    environment:
+      - NODE_ENV=production
+      - CI=true
+    command: npx cucumber-js src/features/checkout.feature
+    
+  test-smoke:
+    build: .
+    container_name: playwright-smoke-tests
+    volumes:
+      - ./reports:/app/reports
+    environment:
+      - NODE_ENV=production
+      - CI=true
+    command: npx cucumber-js src/features/smoke.feature 

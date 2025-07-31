@@ -1,0 +1,142 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, master ]
+  pull_request:
+    branches: [ main, develop, master ]
+
+jobs:
+  test:
+    name: BDD Test Suite
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        browser: [chromium]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps ${{ matrix.browser }}
+      
+    - name: Create reports directory
+      run: mkdir -p reports/screenshots
+      
+    - name: Run smoke test
+      run: npx cucumber-js src/features/smoke.feature
+      
+    - name: Run BDD tests - Login
+      run: npx cucumber-js src/features/login.feature
+      env:
+        CI: true
+        
+    - name: Run BDD tests - Shopping Cart
+      run: npx cucumber-js src/features/shopping-cart.feature
+      env:
+        CI: true
+        
+    - name: Run BDD tests - Checkout
+      run: npx cucumber-js src/features/checkout.feature
+      env:
+        CI: true
+        
+    - name: Generate HTML report
+      run: npm run report
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.browser }}
+        path: reports/
+        retention-days: 30
+        
+    - name: Upload screenshots on failure
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: failure-screenshots-${{ matrix.browser }}
+        path: reports/screenshots/
+        retention-days: 30
+        
+    - name: Comment PR with test results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          let summary = '## 🧪 BDD Test Results\n\n';
+          
+          try {
+            // Check if reports exist
+            if (fs.existsSync('reports/cucumber-report.json')) {
+              const report = JSON.parse(fs.readFileSync('reports/cucumber-report.json', 'utf8'));
+              
+              const totalScenarios = report.length;
+              const passedScenarios = report.filter(s => s.status === 'passed').length;
+              const failedScenarios = totalScenarios - passedScenarios;
+              
+              summary += '### Test Summary\n';
+              summary += `- **Total Scenarios**: ${totalScenarios}\n`;
+              summary += `- **Passed**: ${passedScenarios}\n`;
+              summary += `- **Failed**: ${failedScenarios}\n`;
+              summary += `- **Browser**: ${{ matrix.browser }}\n\n`;
+              
+              if (failedScenarios === 0) {
+                summary += '✅ **All tests passed!**\n';
+              } else {
+                summary += '❌ **Some tests failed. Check the artifacts for details.**\n';
+              }
+            } else {
+              summary += '⚠️ **No test report found**\n';
+            }
+            
+          } catch (error) {
+            summary += '❌ **Error generating test summary**\n';
+          }
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: summary
+          });
+
+  build:
+    name: Build and Type Check
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: TypeScript compilation
+      run: npx tsc --noEmit
+      
+    - name: Run security audit
+      run: npm audit --audit-level moderate
+      
+    - name: Check code formatting
+      run: npx prettier --check "src/**/*.{ts,js,json}" || true 
