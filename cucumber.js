@@ -16,7 +16,7 @@ module.exports = {
       }
     },
     worldParameters: {
-      headless: false
+      headless: process.env.CI === 'true'
     }
   }
 }; 

@@ -36,6 +36,8 @@ jobs:
       
     - name: Run smoke test
       run: npx cucumber-js src/features/smoke.feature
+      env:
+        CI: true
       
     - name: Run BDD tests - Login
       run: npx cucumber-js src/features/login.feature
