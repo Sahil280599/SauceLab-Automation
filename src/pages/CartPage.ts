@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { URLs } from '../config';
 
 /**
  * Page Object Model for SauceDemo Cart Page
@@ -22,7 +23,7 @@ export class CartPage {
      * Verify user is on cart page
      */
     async expectToBeOnCartPage(): Promise<void> {
-        await expect(this.page).toHaveURL('https://www.saucedemo.com/cart.html');
+        await expect(this.page).toHaveURL(URLs.CART_PAGE);
     }
 
     /**

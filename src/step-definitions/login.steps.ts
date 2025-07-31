@@ -1,6 +1,7 @@
 import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { World } from '../support/world';
+import { Messages } from '../config';
 
 // Set default timeout for all steps
 setDefaultTimeout(60 * 1000);
@@ -12,7 +13,7 @@ Given('I am on the SauceDemo login page', async function(this: World) {
 
 Given('I am logged in as {string}', async function(this: World, username: string) {
     await this.loginPage.goto();
-    await this.loginPage.login(username, 'secret_sauce');
+    await this.loginPage.login(username, Messages.TEST_DATA.DEFAULT_PASSWORD);
     await this.inventoryPage.expectToBeOnInventoryPage();
 });
 

@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { URLs, Messages } from '../config';
 
 /**
  * Page Object Model for SauceDemo Login Page
@@ -22,7 +23,7 @@ export class LoginPage {
      * Navigate to the SauceDemo login page
      */
     async goto(): Promise<void> {
-        await this.page.goto('https://www.saucedemo.com/');
+        await this.page.goto(URLs.LOGIN_PAGE);
     }
 
     /**
@@ -73,7 +74,7 @@ export class LoginPage {
      * Verify user is on login page
      */
     async expectToBeOnLoginPage(): Promise<void> {
-        await expect(this.page).toHaveURL('https://www.saucedemo.com/');
+        await expect(this.page).toHaveURL(URLs.LOGIN_PAGE);
         await expect(this.loginButton).toBeVisible();
     }
 } 

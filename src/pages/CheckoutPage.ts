@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { URLs, Messages } from '../config';
 
 /**
  * Page Object Model for SauceDemo Checkout Page
@@ -26,7 +27,7 @@ export class CheckoutPage {
      * Verify user is on checkout information page
      */
     async expectToBeOnCheckoutInfoPage(): Promise<void> {
-        await expect(this.page).toHaveURL('https://www.saucedemo.com/checkout-step-one.html');
+        await expect(this.page).toHaveURL(URLs.CHECKOUT_PAGE);
     }
 
     /**

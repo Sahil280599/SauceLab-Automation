@@ -2,6 +2,7 @@ import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { World } from '../support/world';
 import { delay } from '../support/utils';
+import { Messages } from '../config';
 
 // Set default timeout for all steps
 setDefaultTimeout(60 * 1000);

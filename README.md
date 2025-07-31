@@ -50,6 +50,58 @@ cd playwright-bdd-framework
 npm install
 ```
 
+## ⚙️ Configuration Structure
+
+The framework uses centralized configuration files for better maintainability:
+
+### 📁 Configuration Files
+
+```
+src/config/
+├── index.ts          # Main configuration exports
+├── urls.ts           # All application URLs
+└── messages.ts       # All messages, error messages, and test data
+```
+
+### 🔗 URLs Configuration (`src/config/urls.ts`)
+Centralized location for all application URLs:
+```typescript
+export const URLs = {
+    BASE_URL: 'https://www.saucedemo.com',
+    LOGIN_PAGE: 'https://www.saucedemo.com/',
+    INVENTORY_PAGE: 'https://www.saucedemo.com/inventory.html',
+    CART_PAGE: 'https://www.saucedemo.com/cart.html',
+    // ... more URLs
+};
+```
+
+### 💬 Messages Configuration (`src/config/messages.ts`)
+Centralized location for all messages and test data:
+```typescript
+export const Messages = {
+    SUCCESS: {
+        LOGIN_SUCCESS: 'Successfully logged in',
+        // ... more success messages
+    },
+    ERROR: {
+        LOGIN_FAILED: 'Epic sadface: Username and password do not match...',
+        // ... more error messages
+    },
+    TEST_DATA: {
+        STANDARD_USER: 'standard_user',
+        DEFAULT_PASSWORD: 'secret_sauce',
+        // ... more test data
+    }
+};
+```
+
+### 🎯 Benefits of Centralized Configuration
+- ✅ **Single Source of Truth**: All URLs and messages in one place
+- ✅ **Easy Maintenance**: Update once, applies everywhere
+- ✅ **Type Safety**: TypeScript ensures correct usage
+- ✅ **Consistency**: No duplicate or conflicting values
+- ✅ **Environment Support**: Easy to switch between environments
+
 ## 🏃‍♂️ Test Execution
 
 ### Run All Tests

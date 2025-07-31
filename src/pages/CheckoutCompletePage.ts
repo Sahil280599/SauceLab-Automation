@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { URLs, Messages } from '../config';
 
 /**
  * Page Object Model for SauceDemo Checkout Complete Page
@@ -20,15 +21,15 @@ export class CheckoutCompletePage {
      * Verify user is on checkout complete page
      */
     async expectToBeOnCheckoutCompletePage(): Promise<void> {
-        await expect(this.page).toHaveURL('https://www.saucedemo.com/checkout-complete.html');
+        await expect(this.page).toHaveURL(URLs.CHECKOUT_COMPLETE_PAGE);
     }
 
     /**
      * Verify order confirmation message
      */
     async expectOrderConfirmationMessage(): Promise<void> {
-        await expect(this.completeHeader).toHaveText('Thank you for your order!');
-        await expect(this.completeText).toHaveText('Your order has been dispatched, and will arrive just as fast as the pony can get there!');
+        await expect(this.completeHeader).toHaveText(Messages.ORDER.COMPLETION_MESSAGE);
+        await expect(this.completeText).toHaveText(Messages.ORDER.COMPLETION_DESCRIPTION);
     }
 
     /**

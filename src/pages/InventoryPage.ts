@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { URLs } from '../config';
 
 /**
  * Page Object Model for SauceDemo Inventory Page
@@ -26,7 +27,7 @@ export class InventoryPage {
      * Verify user is on inventory page
      */
     async expectToBeOnInventoryPage(): Promise<void> {
-        await expect(this.page).toHaveURL('https://www.saucedemo.com/inventory.html');
+        await expect(this.page).toHaveURL(URLs.INVENTORY_PAGE);
         await expect(this.inventoryItems.first()).toBeVisible();
     }
 
