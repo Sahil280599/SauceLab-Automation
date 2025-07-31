@@ -35,28 +35,25 @@ jobs:
       run: mkdir -p reports/screenshots
       
     - name: Run smoke test
-      run: npx cucumber-js src/features/smoke.feature
+      run: npx cucumber-js src/features/smoke.feature --format html:reports/cucumber-report.html --format json:reports/cucumber-report.json
       env:
         CI: true
-      
+        
     - name: Run BDD tests - Login
-      run: npx cucumber-js src/features/login.feature
+      run: npx cucumber-js src/features/login.feature --format html:reports/cucumber-report.html --format json:reports/cucumber-report.json
       env:
         CI: true
         
     - name: Run BDD tests - Shopping Cart
-      run: npx cucumber-js src/features/shopping-cart.feature
+      run: npx cucumber-js src/features/shopping-cart.feature --format html:reports/cucumber-report.html --format json:reports/cucumber-report.json
       env:
         CI: true
         
     - name: Run BDD tests - Checkout
-      run: npx cucumber-js src/features/checkout.feature
+      run: npx cucumber-js src/features/checkout.feature --format html:reports/cucumber-report.html --format json:reports/cucumber-report.json
       env:
         CI: true
         
-    - name: Generate HTML report
-      run: npm run report
-      
     - name: Upload test results
       uses: actions/upload-artifact@v4
       if: always()

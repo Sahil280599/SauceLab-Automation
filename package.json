@@ -15,6 +15,7 @@
     "build": "tsc --noEmit",
     "report": "open reports/cucumber-report.html || xdg-open reports/cucumber-report.html || start reports/cucumber-report.html",
     "report:generate": "cucumber-js --format html:reports/cucumber-report.html --format json:reports/cucumber-report.json",
+    "report:ci": "cucumber-js --format html:reports/cucumber-report.html --format json:reports/cucumber-report.json --format progress",
     "report:open": "open reports/ || xdg-open reports/ || start reports/",
     "docker:build": "docker build -t playwright-bdd-framework .",
     "docker:build:simple": "docker build -f Dockerfile.simple -t playwright-bdd-framework-simple .",
