@@ -38,7 +38,7 @@ print_status "Dependencies installed successfully"
 
 # Step 3: Install Playwright browsers
 echo "🌐 Installing Playwright browsers..."
-npx playwright install --with-deps
+npx playwright install --with-deps chromium
 print_status "Playwright browsers installed"
 
 # Step 4: Create reports directory
@@ -46,37 +46,42 @@ echo "📁 Creating reports directory..."
 mkdir -p reports/screenshots
 print_status "Reports directory created"
 
-# Step 5: Run smoke test
-echo "🧪 Running smoke test..."
-npm run test:smoke
-print_status "Smoke test passed"
-
-# Step 6: Run BDD tests
-echo "🧪 Running BDD tests..."
-
-echo "  - Login tests..."
-npm run test:login
-print_status "Login tests passed"
-
-echo "  - Shopping cart tests..."
-npm run test:cart
-print_status "Shopping cart tests passed"
-
-echo "  - Checkout tests..."
-npm run test:checkout
-print_status "Checkout tests passed"
-
-# Step 7: Generate HTML report
-echo "📊 Generating HTML report..."
-npm run report
-print_status "HTML report generated"
-
-# Step 8: TypeScript compilation
-echo "🔧 Running TypeScript compilation..."
+# Step 5: TypeScript compilation check
+echo "🔧 Running TypeScript compilation check..."
 npm run build
 print_status "TypeScript compilation successful"
 
-# Step 9: Check for artifacts
+# Step 6: Run smoke test (CI mode)
+echo "🧪 Running smoke test (CI mode)..."
+CI=true npx cucumber-js src/features/smoke.feature
+print_status "Smoke test passed"
+
+# Step 7: Run BDD tests (CI mode)
+echo "🧪 Running BDD tests (CI mode)..."
+
+echo "  - Login tests..."
+CI=true npx cucumber-js src/features/login.feature
+print_status "Login tests passed"
+
+echo "  - Shopping cart tests..."
+CI=true npx cucumber-js src/features/shopping-cart.feature
+print_status "Shopping cart tests passed"
+
+echo "  - Checkout tests..."
+CI=true npx cucumber-js src/features/checkout.feature
+print_status "Checkout tests passed"
+
+# Step 8: Run all tests together (CI mode)
+echo "🧪 Running all tests together (CI mode)..."
+CI=true npx cucumber-js src/features/
+print_status "All tests passed"
+
+# Step 9: Generate HTML report
+echo "📊 Generating HTML report..."
+npm run report:generate
+print_status "HTML report generated"
+
+# Step 10: Check for artifacts
 echo "📦 Checking generated artifacts..."
 if [ -f "reports/cucumber-report.html" ]; then
     print_status "HTML report found"
@@ -84,22 +89,34 @@ else
     print_warning "HTML report not found"
 fi
 
-if [ -d "dist" ]; then
-    print_status "Build artifacts found"
+if [ -f "reports/cucumber-report.json" ]; then
+    print_status "JSON report found"
 else
-    print_warning "Build artifacts not found"
+    print_warning "JSON report not found"
 fi
 
-# Step 10: Summary
+# Step 11: Summary
 echo ""
 echo "🎉 CI/CD Pipeline Local Test Completed Successfully!"
 echo ""
 echo "📊 Summary:"
 echo "  - ✅ Dependencies installed"
 echo "  - ✅ Playwright browsers installed"
-echo "  - ✅ Smoke test passed"
-echo "  - ✅ BDD tests passed"
-echo "  - ✅ HTML report generated"
 echo "  - ✅ TypeScript compilation successful"
+echo "  - ✅ Smoke test passed"
+echo "  - ✅ Login tests passed"
+echo "  - ✅ Shopping cart tests passed"
+echo "  - ✅ Checkout tests passed"
+echo "  - ✅ All tests together passed"
+echo "  - ✅ HTML report generated"
 echo ""
-echo "🚀 Ready for deployment to CI/CD pipeline!" 
+echo "🚀 Ready for deployment to CI/CD pipeline!"
+echo ""
+echo "💡 To run tests in headed mode (for debugging):"
+echo "   npm run test:headed"
+echo ""
+echo "💡 To run specific test:"
+echo "   npm run test:smoke"
+echo "   npm run test:login"
+echo "   npm run test:cart"
+echo "   npm run test:checkout" 

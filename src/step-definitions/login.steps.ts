@@ -1,52 +1,45 @@
 import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
+import { World } from '../support/world';
 
 // Set default timeout for all steps
 setDefaultTimeout(60 * 1000);
 
-let loginPage: LoginPage;
-let inventoryPage: InventoryPage;
-
-Given('I am on the SauceDemo login page', async function(this: any) {
-    loginPage = new LoginPage(this.page);
-    await loginPage.goto();
-    await loginPage.expectToBeOnLoginPage();
+Given('I am on the SauceDemo login page', async function(this: World) {
+    await this.loginPage.goto();
+    await this.loginPage.expectToBeOnLoginPage();
 });
 
-Given('I am logged in as {string}', async function(this: any, username: string) {
-    loginPage = new LoginPage(this.page);
-    inventoryPage = new InventoryPage(this.page);
-    await loginPage.goto();
-    await loginPage.login(username, 'secret_sauce');
-    await inventoryPage.expectToBeOnInventoryPage();
+Given('I am logged in as {string}', async function(this: World, username: string) {
+    await this.loginPage.goto();
+    await this.loginPage.login(username, 'secret_sauce');
+    await this.inventoryPage.expectToBeOnInventoryPage();
 });
 
-When('I enter username {string}', async function(this: any, username: string) {
-    await loginPage.enterUsername(username);
+When('I enter username {string}', async function(this: World, username: string) {
+    await this.loginPage.enterUsername(username);
 });
 
-When('I enter password {string}', async function(this: any, password: string) {
-    await loginPage.enterPassword(password);
+When('I enter password {string}', async function(this: World, password: string) {
+    await this.loginPage.enterPassword(password);
 });
 
-When('I click the login button', async function(this: any) {
-    await loginPage.clickLogin();
+When('I click the login button', async function(this: World) {
+    await this.loginPage.clickLogin();
 });
 
-Then('I should see the inventory items', async function(this: any) {
-    await inventoryPage.expectInventoryItemsVisible();
+Then('I should see the inventory items', async function(this: World) {
+    await this.inventoryPage.expectInventoryItemsVisible();
 });
 
-When('I click the burger menu', async function(this: any) {
-    await inventoryPage.clickBurgerMenu();
+When('I click the burger menu', async function(this: World) {
+    await this.inventoryPage.clickBurgerMenu();
 });
 
-When('I click the logout link', async function(this: any) {
-    await inventoryPage.clickLogout();
+When('I click the logout link', async function(this: World) {
+    await this.inventoryPage.clickLogout();
 });
 
-Then('I should be redirected to the login page', async function(this: any) {
-    await loginPage.expectToBeOnLoginPage();
+Then('I should be redirected to the login page', async function(this: World) {
+    await this.loginPage.expectToBeOnLoginPage();
 }); 
